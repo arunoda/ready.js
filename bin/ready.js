@@ -58,36 +58,38 @@ function compile(file, callback, type) {
   }
   
   if(!util.isIgnored(file, type)){
-	  if ( type == 'js' && config.compileJs && !util.isExcluded(file) ) {
-		logger.log('Compiling JS: ' + file);
-		// prefer YUI as it is local and has no usage limits
-		if(config.runGCompiler){
-		  logger.log('...using remote Google Compiler')
+	  if ( type == 'js' && config.compileJs && !util.isExcluded(file)) {
+		  logger.log('Compiling JS: ' + file);
+		  // prefer YUI as it is local and has no usage limits
+		  if(config.runGCompiler) {
+		    logger.log('...using remote Google Compiler')
 	      r.compile(file, compileCallback);
-		}else{
-		  logger.log('...using YUI');
-		  r.compileYUI(file, compileCallback);
-		}
-		logger.log('');
-	  } else if ( type == 'css' && config.compileCss && !util.isExcluded(file, 'css')  ) {
-		logger.log('Compiling CSS: ' + file);
-		logger.log('');
-		r.compileYUI(file, compileCallback, 'css');
+		  } else {
+		    logger.log('...using YUI');
+		    r.compileYUI(file, compileCallback);
+		  }		  
+		  logger.log('');
+	  } else if (type == 'css' && config.compileCss && !util.isExcluded(file, 'css')) {
+		  logger.log('Compiling CSS: ' + file);
+		  logger.log('');
+		  r.compileYUI(file, compileCallback, 'css');
 	  } else {
-		if( (type == 'css' && config.compileCss ) || (type == 'js' && config.compileJs ) ){
-			logger.log('Skipping compression: ' + file)
-		    // Get the code directly from the file
-		    fs.readFile(file, function(err, text) {
-		      if (!err) {
-		        callback(file, text.toString());
-		      } else {
-		        r.log("Error reading file : " + file);
-		      }
-		    });
-			logger.log('');
-		}
+		  if ((type == 'css' && config.compileCss ) || (type == 'js' && config.compileJs )){
+			  logger.log('Skipping compression: ' + file)
+			  
+	      // Get the code directly from the file
+	      fs.readFile(file, function(err, text) {
+	        if (!err) {
+	          callback(file, text.toString());
+	        } else {
+	          r.log("Error reading file : " + file);
+	        }
+	      });
+	      
+			  logger.log('');
+		  }
 	  }
-  }else{
+  } else {
 	  logger.log('Ignoring: ' + file);
 	  logger.log('');
   }
@@ -170,18 +172,18 @@ function aggregateAll(type) {
   dest,
   sort;
   
-  if(type == 'js'){
+  if(type == 'js') {
   	aggTo = config.aggregateTo;
     aggs = aggregates;
     dest = config.dest;
     comment = config.aggregatedHeadingComment;
     sort = sortAggregates;
-  }else{
-	aggTo = config.aggregateToCss;
+  } else {
+	  ggTo = config.aggregateToCss;
     aggs = aggregatesCss;
     dest = config.destCss;
     comment = config.aggregatedHeadingCommentCss;
-	sort = sortAggregatesCss;
+	  sort = sortAggregatesCss;
   }
   
   if (aggTo.length > 0) {
@@ -197,14 +199,17 @@ function aggregateAll(type) {
         b = createCode(b);
         return [a, b].join("\n");
       });
+    
     if (typeof(code) !== "string") { code = createCode(code); }
 
     // Write aggregate file	
     fs.mkdir(dest, 0755, function(err) {
       var filepath = dest + "/" + aggTo;
-	  logger.log('');
-	  logger.log('Aggregating ' + type.toUpperCase() + ' to: ' + filepath);
-	  logger.log('');
+      
+	    logger.log('');
+	    logger.log('Aggregating ' + type.toUpperCase() + ' to: ' + filepath);
+	    logger.log('');
+	    
       fs.open(filepath, "w+", 0755, function(err, fd) {
         if (!err) {
           fs.write(fd, createCode({ code: code, filename: comment}), null, null, function(err) {
@@ -215,7 +220,6 @@ function aggregateAll(type) {
         }
       });
     });
-
   }
 }
 
@@ -231,7 +235,7 @@ if (process.argv[2]) {
         r.jslint(file, function(success, jslint) {
           if (success) {
             logger.log("JSLINT success : " + file);
-			logger.log('');
+			      logger.log('');
             compile(file, aggregate);
           } else {
             logger.log("JSLINT error : " + file);
@@ -244,14 +248,13 @@ if (process.argv[2]) {
       }
     });
 	
-	// Start the process for css
+	  // Start the process for css
     util.forEachCss(function(file) {
-	  compile(file, aggregateCss, 'css');
+	    compile(file, aggregateCss, 'css');
     });
   };
 
   util.loadConfigFromArg(startProcessing);
-  
 } else {
   logger.error("No configuration file specified");
 }

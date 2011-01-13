@@ -225,7 +225,7 @@ var tests = {
       a.ok(stat.isFile());
       a.equal(code.match(/\/\* js.js \*\//g).length, 1);
       a.equal(code.match(/\/\* js2.js \*\//g).length, 1);
-      a.equal(code.match(/\/\* .* \*\//g).length, 2);
+      a.equal(code.match(/\/\* .* \*\//g).length, 3); // There's now a header
       
       onEnd();
     });

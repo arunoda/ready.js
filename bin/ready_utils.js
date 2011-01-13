@@ -7,57 +7,57 @@ var r = {
   config : {
 	compileJs : true, // if should compile js
 	compileCss : true,
-    src : "./", // the source dir of js files
+  src : "./", // the source dir of js files
 	srcCss : "./css",
-    dest : "./compiled", // the destination of your minified files
+  dest : "./compiled", // the destination of your minified files
 	destCss: "./compiled_css",
-    compiledExtension : "min", // extension of the minified file
-    runJslint : true, // if should run jsLint
-    runGCompiler : false, // if should run GoogleCompiler rather than YUI
-    keepCompiled : false, // if should keep the minified files
-    aggregateTo : "all.js", // If a string is specified, all the .js will be aggregated to this file in the config.dest 
-    aggregateToCss : "all.css",
-    order : [], // The order of aggregation (example : we want jquery before jquery.ui) Must not specified every file
+  compiledExtension : "min", // extension of the minified file
+  runJslint : true, // if should run jsLint
+  runGCompiler : false, // if should run GoogleCompiler rather than YUI
+  keepCompiled : false, // if should keep the minified files
+  aggregateTo : "all.js", // If a string is specified, all the .js will be aggregated to this file in the config.dest 
+  aggregateToCss : "all.css",
+  order : [], // The order of aggregation (example : we want jquery before jquery.ui) Must not specified every file
 	orderCss : [],
-    exclude : [], // Files that are not compiled but still aggregated
+  exclude : [], // Files that are not compiled but still aggregated
 	excludeCss : [],
 	ignore : [], // Files that are not compiled or aggregated...completely ignored
 	ignoreCss : [],
-    recursive : true, // Should look for javascript recursively
+  recursive : true, // Should look for javascript recursively
 	recursiveCss : true,
-    test : false, // If it's running from test environment
-    debug : false, // If in debug mode
+  test : false, // If it's running from test environment
+  debug : false, // If in debug mode
 	aggregatedHeadingComment: "Aggregated JS",
 	aggregatedHeadingCommentCss: "Aggregated CSS",
 	jsLintOptions : {
-        adsafe     : false, // if ADsafe should be enforced
-        bitwise    : false, // if bitwise operators should not be allowed
-        browser    : false, // if the standard browser globals should be predefined
-        cap        : false, // if upper case HTML should be allowed
-        css        : false, // if CSS workarounds should be tolerated
-        debug      : false, // if debugger statements should be allowed
-        devel      : false, // if logging should be allowed (console, alert, etc.)
-        eqeqeq     : false, // if === should be required
-        evil       : false, // if eval should be allowed
-        forin      : false, // if for in statements must filter
-        fragment   : false, // if HTML fragments should be allowed
-        immed      : false, // if immediate invocations must be wrapped in parens
-        laxbreak   : false, // if line breaks should not be checked
-        newcap     : false, // if constructor names must be capitalized
-        nomen      : false, // if names should be checked
-        on         : false, // if HTML event handlers should be allowed
-        onevar     : false, // if only one var statement per function should be allowed
-        passfail   : false, // if the scan should stop on first error
-        plusplus   : false, // if increment/decrement should not be allowed
-        regexp     : false, // if the . should not be allowed in regexp literals
-        rhino      : false, // if the Rhino environment globals should be predefined
-        undef      : false, // if variables should be declared before used
-        safe       : false, // if use of some browser features should be restricted
-        sidebar    : false, // if the System object should be predefined
-        strict     : false, // require the "use strict"; pragma
-        sub        : false, // if all forms of subscript notation are tolerated
-        white      : false, // if strict whitespace rules apply
-        widget     : false  // if the Yahoo Widgets globals should be predefined
+    adsafe     : false, // if ADsafe should be enforced
+    bitwise    : false, // if bitwise operators should not be allowed
+    browser    : false, // if the standard browser globals should be predefined
+    cap        : false, // if upper case HTML should be allowed
+    css        : false, // if CSS workarounds should be tolerated
+    debug      : false, // if debugger statements should be allowed
+    devel      : false, // if logging should be allowed (console, alert, etc.)
+    eqeqeq     : false, // if === should be required
+    evil       : false, // if eval should be allowed
+    forin      : false, // if for in statements must filter
+    fragment   : false, // if HTML fragments should be allowed
+    immed      : false, // if immediate invocations must be wrapped in parens
+    laxbreak   : false, // if line breaks should not be checked
+    newcap     : false, // if constructor names must be capitalized
+    nomen      : false, // if names should be checked
+    on         : false, // if HTML event handlers should be allowed
+    onevar     : false, // if only one var statement per function should be allowed
+    passfail   : false, // if the scan should stop on first error
+    plusplus   : false, // if increment/decrement should not be allowed
+    regexp     : false, // if the . should not be allowed in regexp literals
+    rhino      : false, // if the Rhino environment globals should be predefined
+    undef      : false, // if variables should be declared before used
+    safe       : false, // if use of some browser features should be restricted
+    sidebar    : false, // if the System object should be predefined
+    strict     : false, // require the "use strict"; pragma
+    sub        : false, // if all forms of subscript notation are tolerated
+    white      : false, // if strict whitespace rules apply
+    widget     : false  // if the Yahoo Widgets globals should be predefined
     }
   },
   logger : {
@@ -103,12 +103,12 @@ var r = {
         +"' as default value for config.dest.");          
     }
 	
-	if (r.config.srcCss == r.config.destCss) {
+	  if (r.config.srcCss == r.config.destCss) {
       var srcCss = r.config.srcCss;
       srcCss = r.config.srcCss + (r.config.srcCss.match(/\/$/) ? "" : "/");
       r.config.destCss = srcCss + "minified/"
       r.logger.log("config.srcCss and config.destCss must be different. Using '"+r.config.destCss
-        +"' as default value for config.dest.");          
+        + "' as default value for config.dest.");          
     }
                   
     // Show config
@@ -116,8 +116,8 @@ var r = {
     for (var p in r.config) {
       r.logger.debug(p.toString() + " : " + r.config[p].toString());
     }
-	r.logger.debug("===================");
-	r.logger.debug("");
+	  r.logger.debug("===================");
+	  r.logger.debug("");
   },
   loadConfigFromArg : function(callback) {
     var configAsString = function(conf) {
@@ -151,10 +151,11 @@ var r = {
         })
       
         // Only process js files
-		var allJsFiles = files.filter(function(f) {
+		    var allJsFiles = files.filter(function(f) {
           return f.match(/\.js$/i);
         });
-		// Remove ignored from those to check against for aggregation
+        
+		    // Remove ignored from those to check against for aggregation
         var jsFilesToBeAggregated = allJsFiles.filter(function(f) {
           return !r.isIgnored(f);
         });
@@ -208,8 +209,9 @@ var r = {
         var allCssFiles = files.filter(function(f) {
           return f.match(/\.css$/i);
         });
-		// Remove ignored from those to check against for aggregation
-		var cssFilesToBeAggregated = allCssFiles.filter(function(f) {
+        
+		    // Remove ignored from those to check against for aggregation
+		    var cssFilesToBeAggregated = allCssFiles.filter(function(f) {
           return !r.isIgnored(f, 'css');
         });
 
@@ -248,15 +250,16 @@ var r = {
 
   // If a file is excluded
   isExcluded : function(file, type) {
-	var excluded = (type && type == 'css') ? r.config.excludeCss : r.config.exclude,
-	filename = file.substring(file.lastIndexOf("/")+1);
+	  var excluded = (type && type == 'css') ? r.config.excludeCss : r.config.exclude,
+	  filename = file.substring(file.lastIndexOf("/")+1);
     if (typeof(excluded) == "string") { excluded = [excluded]; }
+    
     return excluded.indexOf(filename) >= 0
   },
   // If a file is ignored
   isIgnored : function(file, type) {
-	var ignored = (type == 'css') ? r.config.ignoreCss : r.config.ignore,
-	filename = file.substring(file.lastIndexOf("/")+1);
+	  var ignored = (type == 'css') ? r.config.ignoreCss : r.config.ignore,
+	  filename = file.substring(file.lastIndexOf("/")+1);
     if (typeof(ignored) == "string") { ignored = [ignored]; }
     return ignored.indexOf(filename) >= 0
   },
