@@ -8,9 +8,15 @@ var sys = require("sys"),
   
 const SRC = "./test/javascripts/";
 const DEST = "./test/minified/";
-const ALL = "all.js";
+const ALL = "all.";
 
 var initialConfig = null;
+
+var ext = "js"; // js or css
+
+function all() {
+  return ALL + ext;
+}
 
 // Delete all unwanted files
 function emptyDir(dir) {
@@ -34,6 +40,12 @@ function emptyDir(dir) {
   }
   
   return isDir;
+}
+
+function filename(base) {
+  base = base || ext;
+  if (!base.match(/\.$/)) { base += "."; }
+  return base + ext;
 }
 
 function cleanUp() {
@@ -61,7 +73,7 @@ function getConfig(extend) {
   
   var c = { src : SRC,
    dest : DEST,
-   aggregateTo : ALL,
+   aggregateTo : all(),
    test : true,
    debug: true,
   };
@@ -77,7 +89,7 @@ function getConfig(extend) {
 function createFile(path, code, options) {
   options = options || {};
 
-  code = code || ["function load() {}"].join("");
+  code = code || (ext == "js" ? "function load() {}" : "body { font-size:120%; }");
 
   // Create the SRC directory if not exists
   var isDir = false;
@@ -106,26 +118,26 @@ function createFile(path, code, options) {
 
 // Creates 2 js files
 function createTwoFiles() {
-  createFile("js.js");
-  createFile("js2.js");
+  createFile(filename(ext));
+  createFile(filename(ext+"2"));
 }
 
 // Creates bad file
 function createBadFile() {
-  createFile("bad.js", "{(}");
+  createFile(filename("bad"), "{(}");
 }
 
 // Create 3 alphabetical files
 function createAlphaFiles() {
-  createFile("c.js");
-  createFile("b.js");
-  createFile("a.js");
+  createFile(filename("c"));
+  createFile(filename("b"));
+  createFile(filename("a"));
 }
 
 // Create with a subdir
 function createSubdir() {
   createTwoFiles();
-  createFile("subdir.js", "function subdir() {}", {subdir:"subdir"});
+  createFile(filename("subdir"), null, {subdir:"subdir"});
 }
 
 // Execute a ready.js
@@ -149,7 +161,7 @@ function getAggCode(config) {
   if (config) {
     return fs.readFileSync(config.dest + "/" + config.aggregateTo).toString();
   } else {
-    return fs.readFileSync(DEST + ALL).toString();
+    return fs.readFileSync(DEST + all()).toString();
   }
 }
 
@@ -203,11 +215,11 @@ var tests = {
         fs.statSync(DEST + "js2.min.js");
       });
       
-      stat = fs.statSync(DEST + ALL, "minified exists");
+      stat = fs.statSync(DEST + all(), "minified exists");
       a.ok(stat.isFile());
       
       // Check that aggregate has no duplicate
-      var code = fs.readFileSync(DEST + ALL).toString();
+      var code = fs.readFileSync(DEST + all()).toString();
       a.equal(code.match(/\sjs\.js\s/).length, 1);
       
       onEnd();
@@ -287,7 +299,7 @@ var tests = {
   "Test alphabetic order" : function(onEnd) {
     createAlphaFiles();
     exec(function(error, stdout) {
-      var code = fs.readFileSync(DEST + ALL).toString();
+      var code = fs.readFileSync(DEST + all()).toString();
       var pos = [];
       pos.push(code.match(/a\.js/).index);
       pos.push(code.match(/b\.js/).index);
@@ -304,7 +316,7 @@ var tests = {
   "Test custom order" : function(onEnd) {
     createAlphaFiles();
     exec(getConfig({order:["a.js", "c.js"]}), function(error, stdout) {
-      var code = fs.readFileSync(DEST + ALL).toString();
+      var code = fs.readFileSync(DEST + all()).toString();
       var pos = [];
       pos.push(code.match(/a\.js/).index);
       pos.push(code.match(/c\.js/).index);
@@ -323,7 +335,7 @@ var tests = {
     
     exec(getConfig({recursive:true}), function(error, stdout) {
       a.ok(fs.statSync(SRC + "subdir/subdir.js").isFile());
-      var code = fs.readFileSync(DEST + ALL).toString();
+      var code = fs.readFileSync(DEST + all()).toString();
       
       a.ok(code.match(/js\.js/gi));
       a.ok(code.match(/js2\.js/gi));
@@ -411,7 +423,7 @@ if (process.argv[2]) {
     keys.push(p);
   }
 
-  (function execTest() {
+  var execTest = function() {
     cleanUp();
     var key = keys.shift();
     if (key) {
@@ -420,5 +432,8 @@ if (process.argv[2]) {
         tests[key](execTest);
       }
     }
-  })();
+  };
+  
+  ext = "js";
+  execTest();
 }

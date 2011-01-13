@@ -9,7 +9,9 @@ var r = require(__dirname + "/../ready"),
 var aggregates = [];
 var aggregatesCss = [];
 
-function sortAggregates(a, b) {
+function sortAggregates(a, b, order) {
+  order = order || config.order;
+
   a = a.filename;
   b = b.filename;
   
@@ -27,20 +29,7 @@ function sortAggregates(a, b) {
 }
 
 function sortAggregatesCss(a, b) {
-  a = a.filename;
-  b = b.filename;
-  
-  var posA = config.orderCss.indexOf(a);
-  if (posA < 0) { posA = Number.MAX_VALUE };
-  
-  var posB = config.orderCss.indexOf(b);
-  if (posB < 0) { posB = Number.MAX_VALUE };
-  
-  if (posA == posB) {
-    return (a < b) ? -1 : ((a > b) ? 1 : 0);
-  } else {
-    return posA - posB;
-  }         
+  return sortAggregates(a, b, config.orderCss);
 }
 
 function compile(file, callback, type) {
