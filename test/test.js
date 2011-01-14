@@ -89,7 +89,7 @@ function getConfig(extend) {
 function createFile(path, code, options) {
   options = options || {};
 
-  code = code || (ext == "js" ? "function load() {}" : "body { font-size:120%; }");
+  code = code || (ext == "js" ? "function load() { var a = 1; \n\n}" : "body { font-size:120%; }");
 
   // Create the SRC directory if not exists
   var isDir = false;
